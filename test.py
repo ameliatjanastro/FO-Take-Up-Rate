@@ -23,7 +23,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Fill missing values
     df.fillna(0, inplace=True)
-
+    df["Product ID"] = df["Product ID"].astype(str).str.replace(",", "")
     # Ensure Price column has valid values
     df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
 
@@ -57,22 +57,22 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.sidebar.subheader("Filters")
 
     # Multi-select for L1 Category
-    category_options = ["All"] + sorted(df.loc[df["L1 Category"] != 0, "L1 Category"].dropna().unique().tolist())
-    category_filter = st.sidebar.multiselect("Select L1 Category", category_options, default=category_options)
+    #category_options = ["All"] + sorted(df.loc[df["L1 Category"] != 0, "L1 Category"].dropna().unique().tolist())
+    #category_filter = st.sidebar.multiselect("Select L1 Category", category_options, default=category_options)
 
     # Multi-select for Hub ID
     hub_options = sorted(df["Hub ID Fulfilled"].dropna().astype(str).unique().tolist())
     hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + hub_options)
 
     # Apply filters
-    df = df[df["L1 Category"].isin(category_filter)]
+    #df = df[df["L1 Category"].isin(category_filter)]
     if hub_filter != "All":
         df = df[df["Hub ID Fulfilled"].astype(str) == hub_filter]
 
     ### Display Results ###
     
     st.subheader("Take-up Rate Data (With Dates)")
-    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate", "discount_percentage","discount_percentage_best", "take_up_rate_best"]])
+    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "discount_percentage","discount_percentage_best", "take_up_rate_best"]], hide_index=True)
 
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
