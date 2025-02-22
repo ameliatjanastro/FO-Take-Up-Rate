@@ -99,14 +99,16 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         category_options = ["All"] + sorted(df["L1 Category"].dropna().unique().tolist())
     else:
         category_options = ["All"]
-    category_filter = st.sidebar.selectbox("Select L1 Category", category_options)
+    category_filter = st.sidebar.multiselect("Select L1 Category", category_options, default="All")
     hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Hub ID Fulfilled"].dropna().astype(str).unique().tolist()))
-    
+    product_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Product ID"].dropna().astype(str).unique().tolist()))
     # Apply filters
     if category_filter != "All":
         df = df[df["L1 Category"] == category_filter]
     if hub_filter != "All":
         df = df[df["Hub ID Fulfilled"].astype(str) == hub_filter]
+    if product_filter != "All":
+        df = df[df["Product ID"].astype(str) == hub_filter]
 
     ### Display Results ###
     st.subheader("Results")
@@ -115,7 +117,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ### Graph: Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate")
 
-    df_avg = df.groupby("L1 Category", as_index=False).agg({
+    df_avg = df.groupby("Product ID", as_index=False).agg({
     "discount_percentage": "mean",
     "take_up_rate": "mean"
     })
