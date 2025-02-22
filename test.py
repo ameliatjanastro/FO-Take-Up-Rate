@@ -38,7 +38,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         on=["Date", "Product ID"],
         how="left"
     ).merge(
-        normal_sales, on=["Date","Hub ID Order","Hub Name Order","Hub ID Fulfilled","Location Name Fulfilled","Product ID","Product Name","SKU Number","L1 Category","Total Qty Sold","Total Goods Value (IDR)","Qty sold Discounted Price","Total Price Cut (IDR)"], how="left"
+        normal_sales, on=[["Date","Hub ID Order","Hub Name Order","Hub ID Fulfilled","Location Name Fulfilled","Product ID","Product Name","SKU Number","L1 Category","Total Qty Sold","Total Goods Value (IDR)","Qty sold Discounted Price","Total Price Cut (IDR)"]], how="left"
     )
 
     # Compute discount percentage
