@@ -77,8 +77,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
 
     df_avg = df.groupby(["L1 Category","Hub ID Fulfilled"] as_index=False).agg({
-        "avg_discount_percentage": "mean",
-        "take_up_rate": "mean"
+        "discount_percentage_best": "mean",
+        "take_up_rate_best": "mean"
     })
 
     fig = px.scatter(
