@@ -47,7 +47,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ).reset_index()
 
     # Merge discount and normal sales data
-    df1 = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled","L1 Category"], how="left")
+    df1 = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
     df = df1.merge(
     discount_prices[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]],
     on=["Date", "Product ID","L1 Category"],
