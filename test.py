@@ -34,7 +34,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ).reset_index()
     
     # Merge Data
-    df = discount_grouped.merge(discount_prices_latest[["Product ID", "Price", "discounted_price", "Flushout Discount (IDR)", "L1 Category", "Hub ID"]], 
+    df = discount_grouped.merge(discount_prices_latest[["Product ID", "Price", "discounted_price", "Flushout Discount (IDR)", "L1 Category", "Hub ID Fulfilled"]], 
                                 on="Product ID", how="left")
     df = df.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
     
@@ -50,23 +50,23 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["take_up_rate_display"] = (df["take_up_rate"]*100).round(2).astype(str) + "%"
     
     best_discounts = df.loc[df.groupby(["Product ID", "Hub ID"])["take_up_rate"].idxmax(), 
-                            ["Product ID", "Hub ID", "discount_percentage", "take_up_rate", "L1 Category", "Hub ID"]]
+                            ["Product ID", "Hub ID Fulfilled", "discount_percentage", "take_up_rate", "L1 Category", "Hub ID Fulfilled"]]
     
     # Merge best discount info
-    df = df.merge(best_discounts, on=["Product ID", "Hub ID"], how="left", suffixes=("", "_best"))
+    df = df.merge(best_discounts, on=["Product ID", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
 
     ### Sidebar Filters ###
     st.sidebar.subheader("Filters")
     
     # Dropdowns for L1 Category and Hub ID
     category_filter = st.sidebar.selectbox("Select L1 Category", ["All"] + sorted(df["L1 Category"].dropna().unique().tolist()))
-    hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Hub ID"].dropna().astype(str).unique().tolist()))
+    hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Hub ID Fulfilled"].dropna().astype(str).unique().tolist()))
     
     # Apply filters
     if category_filter != "All":
         df = df[df["L1 Category"] == category_filter]
     if hub_filter != "All":
-        df = df[df["Hub ID"].astype(str) == hub_filter]
+        df = df[df["Hub ID Fulfilled"].astype(str) == hub_filter]
     
     ### Display Results ###
     st.subheader("Results")
@@ -76,12 +76,12 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.subheader("Best Discount % vs. Take-up Rate")
     fig = px.scatter(
         df, x="discount_percentage", y="take_up_rate", color="l1_category",
-        hover_data=["Product ID", "Hub ID"], title="Effectiveness of Discounts"
+        hover_data=["Product ID", "Hub ID Fulfilled"], title="Effectiveness of Discounts"
     )
     st.plotly_chart(fig)
     
     ### Export CSV (keeping decimal format) ###
-    export_df = df[["Product ID", "Hub ID", "take_up_rate", "discount_percentage"]]
+    export_df = df[["Product ID", "Hub ID Fulfilled", "take_up_rate", "discount_percentage"]]
     st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
 else:
