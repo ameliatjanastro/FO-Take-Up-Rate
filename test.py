@@ -108,5 +108,5 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         export_df = df[["Product ID", "Hub ID Fulfilled", "take_up_rate_best", "discount_percentage_best"]]
         st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
-    else:
-        st.write("Upload all three CSV files to proceed.")
+else:
+    st.write("Upload all three CSV files to proceed.")
