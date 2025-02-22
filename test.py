@@ -1,9 +1,11 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
-# Upload CSV files
+# Streamlit App Title
 st.title("Campaign Take-up Rate Calculator")
 
+# Sidebar: Upload CSV files
 st.sidebar.header("Upload Data")
 discount_sales_file = st.sidebar.file_uploader("Upload Discount Sales CSV", type=["csv"])
 discount_price_file = st.sidebar.file_uploader("Upload Discount Price CSV", type=["csv"])
@@ -12,47 +14,66 @@ normal_sales_file = st.sidebar.file_uploader("Upload Normal Sales CSV", type=["c
 if discount_sales_file and discount_price_file and normal_sales_file:
     # Load Data
     discount_sales = pd.read_csv(discount_sales_file, parse_dates=["Date"])
-    discount_prices_latest = pd.read_csv(discount_price_file)
+    discount_prices = pd.read_csv(discount_price_file, parse_dates=["Date"])
     normal_sales = pd.read_csv(normal_sales_file, parse_dates=["Date"])
 
-    # Get the most recent discount price per product
-    #discount_prices_sorted = discount_prices.sort_values(by=["Date"], ascending=False)
-    #discount_prices_latest = discount_prices_sorted.drop_duplicates(subset=["Product ID"], keep="first")
-    
-    # Compute discounted price
-    discount_prices_latest["discounted_price"] = discount_prices_latest["Price"] - discount_prices_latest["Flushout Discount (IDR)"]
+    # Standardize column names (strip spaces)
+    discount_prices = discount_prices.rename(columns=lambda x: x.strip())
 
-    # Aggregate sales data
-    discount_grouped = discount_sales.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
-        qty_sold=("Qty sold Discounted Price", "sum"),
-        discount_days=("Date", "nunique")
-    ).reset_index()
+    # Ensure column names are correct
+    expected_columns = ["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category", "Hub ID Fulfilled"]
+    missing_cols = [col for col in expected_columns if col not in discount_prices.columns]
     
+    if missing_cols:
+        st.error(f"Missing columns in discount price file: {missing_cols}")
+        st.stop()
+
+    # Sort discount prices by date (most recent first)
+    discount_prices_sorted = discount_prices.sort_values(by=["Date"], ascending=False)
+
+    # Merge discount sales with correct discount prices (matching Date + Product ID + Hub ID)
+    discount_sales = discount_sales.merge(
+        discount_prices_sorted[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category", "Hub ID Fulfilled"]],
+        on=["Date", "Product ID"],
+        how="left"
+    )
+
+    # Compute discounted price
+    discount_sales["discounted_price"] = discount_sales["Price"] - discount_sales["Flushout Discount (IDR)"]
+
+    # Aggregate discount sales
+    discount_grouped = discount_sales.groupby(["Product ID", "Hub ID Fulfilled", "Date"]).agg(
+        qty_sold=("Qty sold Discounted Price", "sum")
+    ).reset_index()
+
+    # Aggregate normal sales (calculate average daily sales)
     normal_grouped = normal_sales.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
-        qty_sold=("Total Qty Sold", "sum"),
+        avg_qty_sold=("Total Qty Sold", "mean"),  # Average per active day
+        total_qty_sold=("Total Qty Sold", "sum"),
         non_discount_days=("Date", "nunique")
     ).reset_index()
+
+    # Merge discount and normal sales data
+    df = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
+
+    # Fill NaN values with 0
+    df.fillna(0, inplace=True)
+
+    # Calculate Take-up Rate (Comparing daily sales rates)
+    df["take_up_rate"] = df["qty_sold"] / df["avg_qty_sold"]
     
-    # Merge Data
-    df = discount_grouped.merge(discount_prices_latest[["Product ID", "Price", "discounted_price", "Flushout Discount (IDR)", "L1 Category"]], 
-                                on=["Product ID","L1 Category"], how="left")
-    df = df.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
-    
-    # Calculate Daily Sales Rates
-    df["discounted_sales_rate"] = df["qty_sold_x"] / df["discount_days"]
-    df["non_discounted_sales_rate"] = df["qty_sold_y"] / df["non_discount_days"]
-    
-    # Calculate Take-up Rate
-    df["take_up_rate"] = df["discounted_sales_rate"] / df["non_discounted_sales_rate"]
+    # Calculate Discount Percentage
     df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]).clip(upper=1) * 100
 
+    # Round for Display
     df["discount_percentage_display"] = df["discount_percentage"].round(2).astype(str) + "%"
-    df["take_up_rate_display"] = (df["take_up_rate"]*100).round(2).astype(str) + "%"
-    
-    best_discounts = df.loc[df.groupby(["Product ID", "Hub ID"])["take_up_rate"].idxmax(), 
-                            ["Product ID", "Hub ID Fulfilled", "discount_percentage", "take_up_rate", "L1 Category", "Hub ID Fulfilled"]]
-    
-    # Merge best discount info
+    df["take_up_rate_display"] = (df["take_up_rate"] * 100).round(2).astype(str) + "%"
+
+    # Find the best discount percentage (highest take-up rate per product & hub)
+    best_discounts = df.loc[df.groupby(["Product ID", "Hub ID Fulfilled"])["take_up_rate"].idxmax(), 
+                            ["Product ID", "Hub ID Fulfilled", "discount_percentage", "take_up_rate", "L1 Category"]]
+
+    # Merge best discount info back into df
     df = df.merge(best_discounts, on=["Product ID", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
 
     ### Sidebar Filters ###
@@ -67,15 +88,15 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         df = df[df["L1 Category"] == category_filter]
     if hub_filter != "All":
         df = df[df["Hub ID Fulfilled"].astype(str) == hub_filter]
-    
+
     ### Display Results ###
     st.subheader("Results")
-    st.dataframe(df[["Product ID", "Hub ID", "take_up_rate_display", "discount_percentage_display"]])
+    st.dataframe(df[["Product ID", "Hub ID Fulfilled", "take_up_rate_display", "discount_percentage_display"]])
     
     ### Graph: Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate")
     fig = px.scatter(
-        df, x="discount_percentage", y="take_up_rate", color="l1_category",
+        df, x="discount_percentage", y="take_up_rate", color="L1 Category",
         hover_data=["Product ID", "Hub ID Fulfilled"], title="Effectiveness of Discounts"
     )
     st.plotly_chart(fig)
@@ -86,3 +107,5 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
 else:
     st.write("Upload all three CSV files to proceed.")
+
+
