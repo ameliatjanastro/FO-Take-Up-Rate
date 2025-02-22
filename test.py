@@ -66,7 +66,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Apply filters
     df = df[df["L1 Category"].isin(category_filter)]
-    df = df[df["Hub ID Fulfilled"].astype(str).isin(hub_filter)]
+    if hub_filter != "All":
+        df = df[df["Hub ID Fulfilled"].astype(str) == hub_filter]
 
     ### Display Results ###
     
