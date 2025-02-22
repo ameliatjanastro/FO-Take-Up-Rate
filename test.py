@@ -89,6 +89,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Merge best discount info back into df
     df = df.merge(best_discounts, on=["Product ID", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
+    st.write(df[["Product ID", "Hub ID Fulfilled", "Price", "Flushout Discount (IDR)", "discount_percentage"]].head())
 
     ### Sidebar Filters ###
     st.sidebar.subheader("Filters")
