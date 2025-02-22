@@ -15,7 +15,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Load only required columns
     discount_sales = pd.read_csv(discount_sales_file, usecols=["Date", "Product ID", "Hub ID Fulfilled", "Qty sold Discounted Price"], parse_dates=["Date"])
     normal_sales = pd.read_csv(normal_sales_file, usecols=["Date", "Product ID", "Hub ID Fulfilled", "Total Qty Sold"], parse_dates=["Date"])
-    discount_prices = pd.read_csv(discount_price_file, usecols=["Date","Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"], parse_dates=["Date"])
+    discount_prices = pd.read_csv(discount_price_file, usecols=["Date","Product ID", "Price","Total Sales (Qty)", "Flushout Discount (IDR)", "L1 Category"], parse_dates=["Date"])
 
     # Merge sales data with discount price data
     df = discount_sales.merge(discount_prices, on=["Date","Product ID"], how="left")
@@ -28,7 +28,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
 
     # Calculate discount percentage
-    df["discount_percentage"] = (df["Flushout Discount (IDR)"]/df["Qty sold Discounted Price"]) / df["Price"]
+    df["discount_percentage"] = (df["Flushout Discount (IDR)"]/df["Total Sales (Qty)"]) / df["Price"]
 
     # Aggregate sales data per product & hub (for independent best discount calculation)
     agg_df = df.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
