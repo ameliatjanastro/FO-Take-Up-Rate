@@ -34,8 +34,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ).reset_index()
     
     # Merge Data
-    df = discount_grouped.merge(discount_prices_latest["Product ID", "Price", "discounted_price", "Flushout Discount (IDR)", "L1 Category", "Hub ID Fulfilled"], 
-                                on="Product ID", how="left")
+    df = discount_grouped.merge(discount_prices_latest[["Product ID", "Price", "discounted_price", "Flushout Discount (IDR)", "L1 Category", "Hub ID Fulfilled"]], 
+                                on=["Product ID","Hub ID Fulfilled"], how="left")
     df = df.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
     
     # Calculate Daily Sales Rates
