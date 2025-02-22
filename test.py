@@ -57,7 +57,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.sidebar.subheader("Filters")
 
     # Multi-select for L1 Category
-    category_options = sorted(df["L1 Category"].dropna().astype(str).unique().tolist())
+    category_options = ["All"] + sorted(df.loc[df["L1 Category"] != 0, "L1 Category"].dropna().unique().tolist())
     category_filter = st.sidebar.multiselect("Select L1 Category", category_options, default=category_options)
 
     # Multi-select for Hub ID
@@ -84,8 +84,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     fig = px.scatter(
         df_avg, 
-        x="avg_discount_percentage", 
-        y="take_up_rate", 
+        x="discount_percentage_best", 
+        y="take_up_rate_best", 
         text="L1 Category",  
         title="Effectiveness of Discounts (Averaged by L1 Category)"
     )
