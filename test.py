@@ -77,6 +77,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ### Display Results ###
     
     st.subheader("Take-up Rate Data (With Dates)")
+    df.columns = df.columns.str.strip()
     df["FO Discount %"] = (df["discount_percentage_best"]*100).round(2).astype(str) + "%"
     df["Take Up Rate Ideal"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
     selected_columns = [col for col in ["Date", "Product ID", "Hub ID Fulfilled", "L1 Category", "FO Discount %", "Take Up Rate Ideal"] if col in df.columns]
