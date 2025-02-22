@@ -35,15 +35,15 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
 
     # Aggregate discount sales
-    discount_grouped = discount_sales.groupby(["Product ID", "Hub ID Fulfilled", "Date"]).agg(
-        qty_sold=("Qty sold Discounted Price", "sum")
+    discount_grouped = discount_sales.groupby(["product_id", "location_id"]).agg(
+        qty_sold=("qty_sold", "sum"),
+        discount_days=("sold_date", "nunique")
     ).reset_index()
-
-    # Aggregate normal sales (calculate average daily sales)
-    normal_grouped = normal_sales.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
-        avg_qty_sold=("Total Qty Sold", "mean"),  # Average per active day
-        total_qty_sold=("Total Qty Sold", "sum"),
-        non_discount_days=("Date", "nunique")
+    
+    # Aggregate normal sales
+    normal_grouped = normal_sales.groupby(["product_id", "location_id"]).agg(
+        qty_sold=("qty_sold", "sum"),
+        non_discount_days=("sold_date", "nunique")
     ).reset_index()
 
     # Merge discount and normal sales data
@@ -74,7 +74,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
     df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
     df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"])
-    df["take_up_rate"] = df["qty_sold"] / df["avg_qty_sold"]
+    df["discounted_sales_rate"] = df["qty_sold_x"] / df["discount_days"]
+    df["non_discounted_sales_rate"] = df["qty_sold_y"] / df["non_discount_days"]
+    df["take_up_rate"] = df["discounted_sales_rate"] / df["non_discounted_sales_rate"]
     
     # Calculate Discount Percentage
     #df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"])* 100
