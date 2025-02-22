@@ -36,15 +36,15 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     on=["Date", "Product ID"],
     how="left"
 )
-
-# Ensure no missing columns before calculations
-if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
-    df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
-    df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
-    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
-else:
-    st.error("Missing 'Flushout Discount (IDR)' or 'Price' column after merging. Check input files.")
-    st.stop()
+    
+    # Ensure no missing columns before calculations
+    if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
+        df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
+        df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
+        df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
+    else:
+        st.error("Missing 'Flushout Discount (IDR)' or 'Price' column after merging. Check input files.")
+        st.stop()
     # Compute discounted price
     discount_sales["discounted_price"] = discount_sales["Price"] - discount_sales["Flushout Discount (IDR)"]
 
