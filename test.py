@@ -119,10 +119,16 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     "discount_percentage": "mean",
     "take_up_rate": "mean"
     })
+    # Create scatter plot using the averaged values
     fig = px.scatter(
-        df, x="discount_percentage", y="take_up_rate", color="L1 Category",
-        hover_data=["Product ID", "Hub ID Fulfilled"], title="Effectiveness of Discounts"
+    df_avg, 
+    x="discount_percentage", 
+    y="take_up_rate", 
+    text="L1 Category",  # Show category names
+    title="Effectiveness of Discounts (Averaged by L1 Category)"
     )
+
+    fig.update_traces(textposition="top center")  # Adjust label position
     st.plotly_chart(fig)
     
     ### Export CSV (keeping decimal format) ###
