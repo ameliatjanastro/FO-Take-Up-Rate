@@ -24,6 +24,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Fill missing values
     df.fillna(0, inplace=True)
     df["Product ID"] = df["Product ID"].astype(str).str.replace(",", "")
+    df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
+    
     # Ensure Price column has valid values
     df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
 
@@ -72,7 +74,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ### Display Results ###
     
     st.subheader("Take-up Rate Data (With Dates)")
-    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "discount_percentage","discount_percentage_best", "take_up_rate_best"]], hide_index=True)
+    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "discount_percentage", "take_up_rate", "discount_percentage_best", "take_up_rate_best"]], hide_index=True)
 
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
