@@ -56,9 +56,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     # Ensure no missing columns before calculations
     if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
-        df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
-        df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
-        df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
+        #df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
+        #df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
+        #df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
     else:
         st.error("Missing 'Flushout Discount (IDR)' or 'Price' column after merging. Check input files.")
         st.stop()
@@ -71,6 +71,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df.fillna(0, inplace=True)
 
     # Calculate Take-up Rate (Comparing daily sales rates)
+    df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
+    df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
+    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
     df["take_up_rate"] = df["qty_sold"] / df["avg_qty_sold"]
     
     # Calculate Discount Percentage
