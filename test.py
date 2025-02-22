@@ -27,7 +27,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ).reset_index()
     
     # Merge Data
-    df = discount_grouped.merge(discount_prices, on="Product ID", how="left")
+    df = discount_grouped.merge(discount_prices, on=["Product ID","Date"], how="left")
     df = df.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
     
     # Calculate Daily Sales Rates
@@ -36,7 +36,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     # Calculate Take-up Rate
     df["take_up_rate"] = df["discounted_sales_rate"] / df["non_discounted_sales_rate"]
-    df["discount_percentage"] = round(df["Flushout Discount (IDR)"] / df["Price"]) * 100
+    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
     # Display Results
     st.subheader("Results")
     st.dataframe(df[["Product ID", "Hub ID Fulfilled", "take_up_rate","discount_percentage"]])
