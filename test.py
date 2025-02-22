@@ -24,7 +24,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Aggregate sales data
     discount_grouped = discount_sales.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
-        qty_sold=("Qty sold Discounted Price", "sum")
+        qty_sold=("Qty sold Discounted Price", "sum"),
         discount_days=("Date", "nunique")
     ).reset_index()
     
