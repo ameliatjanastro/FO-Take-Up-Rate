@@ -44,7 +44,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Compute discount percentage
     df["Price"] = df["Price"].replace(0, float("nan"))  # Avoid division by zero
     df["discount_percentage"] = df["Flushout Discount (IDR)"] / df["Price"]
-
+    st.write(df.head())
     # Compute daily sales rates
     df["discounted_sales_rate"] = df["Qty sold Discounted Price"]
     df["non_discounted_sales_rate"] = df["Total Qty Sold"]
