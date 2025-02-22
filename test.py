@@ -23,7 +23,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     # Get the most recent discount price per product
     #discount_prices_sorted = discount_prices.sort_values(by=["Date"], ascending=False)
-    discount_prices_latest = discount_prices_sorted.drop_duplicates(subset=["product_id", "hub_id"], keep="first")
+    discount_prices_latest = discount_prices.drop_duplicates(subset=["product_id", "hub_id"], keep="first")
     
     # Compute discounted price
     discount_prices_latest["discounted_price"] = discount_prices_latest["normal_price"] - discount_prices_latest["discount_amount"]
