@@ -103,7 +103,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Hub ID Fulfilled"].dropna().astype(str).unique().tolist()))
     product_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Product ID"].dropna().astype(str).unique().tolist()))
     # Apply filters
-    if category_filter != "All":
+    if category_filter != [""]:
         df = df[df["L1 Category"] == category_filter]
     if hub_filter != "All":
         df = df[df["Hub ID Fulfilled"].astype(str) == hub_filter]
