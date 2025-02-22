@@ -79,7 +79,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.subheader("Take-up Rate Data (With Dates)")
     df["FO Discount %"] = (df["discount_percentage_best"]*100).round(2).astype(str) + "%"
     df["Take Up Rate Ideal"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
-    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "discount_percentage", "take_up_rate", "FO Discount %", "Take Up Rate Ideal"]], hide_index=True)
+    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "discount_percentage", "FO Discount %", "Take Up Rate Ideal"]], hide_index=True)
 
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
