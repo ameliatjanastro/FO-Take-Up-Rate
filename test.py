@@ -35,15 +35,15 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
 
     # Aggregate discount sales
-    discount_grouped = discount_sales.groupby(["product_id", "location_id"]).agg(
+    discount_grouped = discount_sales.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
         qty_sold=("qty_sold", "sum"),
-        discount_days=("sold_date", "nunique")
+        discount_days=("Date", "nunique")
     ).reset_index()
     
     # Aggregate normal sales
-    normal_grouped = normal_sales.groupby(["product_id", "location_id"]).agg(
+    normal_grouped = normal_sales.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
         qty_sold=("qty_sold", "sum"),
-        non_discount_days=("sold_date", "nunique")
+        non_discount_days=("Date", "nunique")
     ).reset_index()
 
     # Merge discount and normal sales data
