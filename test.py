@@ -15,10 +15,10 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Load only required columns
     discount_sales = pd.read_csv(discount_sales_file, usecols=["Date", "Product ID", "Hub ID Fulfilled", "Qty sold Discounted Price"], parse_dates=["Date"])
     normal_sales = pd.read_csv(normal_sales_file, usecols=["Date", "Product ID", "Hub ID Fulfilled", "Total Qty Sold"], parse_dates=["Date"])
-    discount_prices = pd.read_csv(discount_price_file, usecols=["Date","Product ID", "Price", "Flushout Discount (IDR)", "L1 Category","Qty sold Discounted Price"])
+    discount_prices = pd.read_csv(discount_price_file, usecols=["Date","Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"])
 
     # Merge sales data with discount price data
-    df = discount_sales.merge(discount_prices, on=["Date","Product ID","Qty sold Discounted Price"], how="left")
+    df = discount_sales.merge(discount_prices, on=["Date","Product ID"], how="left")
     df = df.merge(normal_sales, on=["Date", "Product ID", "Hub ID Fulfilled"], how="left")
 
     # Fill missing values
