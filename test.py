@@ -63,7 +63,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["take_up_rate"] = df["qty_sold"] / df["avg_qty_sold"]
     
     # Calculate Discount Percentage
-    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]).clip(upper=1) * 100
+    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"])* 100
 
     # Round for Display
     df["discount_percentage_display"] = df["discount_percentage"].round(2).astype(str) + "%"
