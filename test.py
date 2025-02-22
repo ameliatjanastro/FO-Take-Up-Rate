@@ -23,8 +23,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Fill missing values
     df.fillna(0, inplace=True)
-    df["Product ID"] = df["Product ID"].astype(str).str.replace(",", "")
-    df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
+
     
     # Ensure Price column has valid values
     df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
@@ -78,9 +77,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     st.subheader("Take-up Rate Data (With Dates)")
     df.columns = df.columns.str.strip()
+    df["Product ID"] = df["Product ID"].astype(str).str.replace(",", "")
+    df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
     df["FO Discount %"] = (df["discount_percentage_best"]*100).round(2).astype(str) + "%"
     df["Take Up Rate Ideal"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
-    selected_columns = [col for col in ["Date", "Product ID", "Hub ID Fulfilled", "discount_percentage_best", "take_up_rate_best", "FO Discount %", "Take Up Rate Ideal"] if col in df.columns]
+    selected_columns = [col for col in ["Date", "Product ID", "Hub ID Fulfilled","FO Discount %", "Take Up Rate Ideal"] if col in df.columns]
 
     st.dataframe(df[selected_columns], hide_index=True)
 
