@@ -45,8 +45,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     else:
         st.error("Missing 'Flushout Discount (IDR)' or 'Price' column after merging. Check input files.")
         st.stop()
-    # Compute discounted price
-    discount_sales["discounted_price"] = discount_sales["Price"] - discount_sales["Flushout Discount (IDR)"]
+    
 
     # Aggregate discount sales
     discount_grouped = discount_sales.groupby(["Product ID", "Hub ID Fulfilled", "Date"]).agg(
@@ -62,6 +61,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Merge discount and normal sales data
     df = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
+
+    # Compute discounted price
+    discount_sales["discounted_price"] = discount_sales["Price"] - discount_sales["Flushout Discount (IDR)"]
 
     # Fill NaN values with 0
     df.fillna(0, inplace=True)
