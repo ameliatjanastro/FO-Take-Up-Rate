@@ -101,13 +101,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         category_options = ["All"]
     category_filter = st.sidebar.multiselect("Select L1 Category", category_options, default="All")
     hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Hub ID Fulfilled"].dropna().astype(str).unique().tolist()))
-    product_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Product ID"].dropna().astype(str).unique().tolist()))
+    #product_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Product ID"].dropna().astype(str).unique().tolist()))
     # Apply filters
     if hub_filter != "All":
         df = df[df["Hub ID Fulfilled"].astype(str) == hub_filter]
-    if product_filter != "All":
-        df = df[df["Product ID"].astype(str) == hub_filter]
-
+    
     ### Display Results ###
     st.subheader("Results")
     st.dataframe(df[["Product ID", "Hub ID Fulfilled", "take_up_rate_display", "discount_percentage_display"]])
