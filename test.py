@@ -22,7 +22,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
                                                       "L1 Category": "l1_category", "Hub ID Fulfilled": "hub_id"})
     
     # Get the most recent discount price per product
-    discount_prices_sorted = discount_prices.sort_values(by=["Date"], ascending=False)
+    #discount_prices_sorted = discount_prices.sort_values(by=["Date"], ascending=False)
     discount_prices_latest = discount_prices_sorted.drop_duplicates(subset=["product_id", "hub_id"], keep="first")
     
     # Compute discounted price
@@ -83,7 +83,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     ### Display Results ###
     st.subheader("Results")
-    st.dataframe(df[["product_id", "hub_id", "take_up_rate_display", "discount_percentage_display"]])
+    st.dataframe(df[["Date", "product_id", "hub_id", "take_up_rate_display", "discount_percentage_display"]])
     
     ### Graph: Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate")
@@ -94,7 +94,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.plotly_chart(fig)
     
     ### Export CSV (keeping decimal format) ###
-    export_df = df[["product_id", "hub_id", "take_up_rate", "discount_percentage"]]
+    export_df = df[["Date", "product_id", "hub_id", "take_up_rate", "discount_percentage"]]
     st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
 else:
