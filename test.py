@@ -63,7 +63,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
 
     # Compute discounted price
-    discount_sales["discounted_price"] = discount_sales["Price"] - discount_sales["Flushout Discount (IDR)"]
+    df["discounted_price"] = df["Price"] - df["Flushout Discount (IDR)"]
 
     # Fill NaN values with 0
     df.fillna(0, inplace=True)
