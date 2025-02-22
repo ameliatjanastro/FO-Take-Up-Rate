@@ -91,7 +91,12 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.sidebar.subheader("Filters")
     
     # Dropdowns for L1 Category and Hub ID
-    category_filter = st.sidebar.selectbox("Select L1 Category", ["All"] + sorted(df["L1 Category"].dropna().unique().tolist()))
+    if "L1 Category" in df.columns:
+        df["L1 Category"] = df["L1 Category"].astype(str)  # Ensure all values are strings
+        category_options = ["All"] + sorted(df["L1 Category"].dropna().unique().tolist())
+    else:
+        category_options = ["All"]
+    category_filter = st.sidebar.selectbox("Select L1 Category", category_options)
     hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + sorted(df["Hub ID Fulfilled"].dropna().astype(str).unique().tolist()))
     
     # Apply filters
