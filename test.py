@@ -42,10 +42,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["take_up_rate_display"] = df["take_up_rate"].round(2).astype(str) + "%"
     # Display Results
     st.subheader("Results")
-    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate","discount_percentage"]])
-    
-    # Option to Download Processed Data
-    st.download_button("Download Results as CSV", df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
+    st.dataframe(df[["product_id", "location_id", "take_up_rate_display", "discount_percentage_display"]])
+
+    # Export CSV (keep decimal format)
+    export_df = df[["product_id", "location_id", "take_up_rate", "discount_percentage"]]
+    st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
 else:
     st.write("Upload all three CSV files to proceed.")
