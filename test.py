@@ -80,7 +80,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     #df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"])* 100
 
     # Round for Display
-    df["discount_percentage_display"] = (df["discount_percentage"]*100).round(2).astype(str) + "%"
+    df["discount_percentage_display"] = (df["discount_percentage"]*100).round(0).astype(str) + "%"
     df["take_up_rate_display"] = (df["take_up_rate"] * 100).round(2).astype(str) + "%"
 
     # Find the best discount percentage (highest take-up rate per product & hub)
@@ -89,7 +89,6 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Merge best discount info back into df
     df = df.merge(best_discounts, on=["Product ID", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
-    st.write(df[["Product ID", "Hub ID Fulfilled", "Price", "Flushout Discount (IDR)", "discount_percentage"]].head())
 
     ### Sidebar Filters ###
     st.sidebar.subheader("Filters")
