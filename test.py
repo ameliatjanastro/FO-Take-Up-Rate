@@ -53,7 +53,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     on=["Date", "Product ID"],
     how="left"
 )
-    df = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
+    df = df1.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
     # Ensure no missing columns before calculations
     #if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
         #df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
