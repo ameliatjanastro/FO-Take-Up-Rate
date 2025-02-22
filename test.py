@@ -53,7 +53,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     on=["Product ID"],
     how="left"
 )
-    df = df1.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
+    df = df1.merge(normal_grouped, on=["Date", "Product ID", "Hub ID Fulfilled"], how="left")
     # Ensure no missing columns before calculations
     #if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
         #df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
@@ -110,7 +110,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     ### Display Results ###
     st.subheader("Results")
-    st.dataframe(df[["Product ID", "Hub ID Fulfilled", "take_up_rate_display", "discount_percentage_display"]])
+    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate_display", "discount_percentage_display"]])
     
     ### Graph: Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate")
