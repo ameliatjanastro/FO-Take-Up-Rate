@@ -39,7 +39,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
     # Display Results
     st.subheader("Results")
-    st.dataframe(df[["Product ID", "Hub ID Fulfilled", "take_up_rate","discount_percentage"]])
+    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate","discount_percentage"]])
     
     # Option to Download Processed Data
     st.download_button("Download Results as CSV", df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
