@@ -7,50 +7,30 @@ st.title("Campaign Take-up Rate Calculator")
 
 # Sidebar: Upload CSV files
 st.sidebar.header("Upload Data")
-discount_sales_file = st.sidebar.file_uploader("Upload Discount Sales CSV", type=["csv"])
-discount_price_file = st.sidebar.file_uploader("Upload Discount Price CSV", type=["csv"])
-normal_sales_file = st.sidebar.file_uploader("Upload Normal Sales CSV", type=["csv"])
+# Load only required columns
+discount_sales = pd.read_csv(discount_sales_file, usecols=["Date", "Product ID", "Hub ID Fulfilled", "Qty sold Discounted Price"], parse_dates=["Date"])
+normal_sales = pd.read_csv(normal_sales_file, usecols=["Date", "Product ID", "Hub ID Fulfilled", "Total Qty Sold"], parse_dates=["Date"])
+discount_prices = pd.read_csv(discount_price_file, usecols=["Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"], parse_dates=["Date"])
 
-if discount_sales_file and discount_price_file and normal_sales_file:
-    # Load Data
-    discount_sales = pd.read_csv(discount_sales_file, parse_dates=["Date"])
-    discount_prices = pd.read_csv(discount_price_file, parse_dates=["Date"])
-    normal_sales = pd.read_csv(normal_sales_file, parse_dates=["Date"])
+# Merge the datasets
+df = discount_sales.merge(discount_prices, on="Product ID", how="left")
+df = df.merge(normal_sales, on=["Date", "Product ID", "Hub ID Fulfilled"], how="left")
 
-    # Standardize column names
-    discount_prices = discount_prices.rename(columns=lambda x: x.strip())
+# Fill missing values
+df.fillna(0, inplace=True)
 
-    # Ensure required columns exist
-    expected_columns = ["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]
-    missing_cols = [col for col in expected_columns if col not in discount_prices.columns]
-    if missing_cols:
-        st.error(f"Missing columns in discount price file: {missing_cols}")
-        st.stop()
+# Compute discount percentage
+df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
+df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
+df["discount_percentage"] = df["Flushout Discount (IDR)"] / df["Price"]
 
-    # Fill NaN values to avoid calculation errors
-    discount_sales["Qty sold Discounted Price"] = discount_sales["Qty sold Discounted Price"].fillna(0)
-    normal_sales["Total Qty Sold"] = normal_sales["Total Qty Sold"].fillna(0)
-    discount_prices["Flushout Discount (IDR)"] = discount_prices["Flushout Discount (IDR)"].fillna(0)
+# Compute sales rates
+df["discounted_sales_rate"] = df["Qty sold Discounted Price"] / df.groupby(["Product ID", "Hub ID Fulfilled"])["Date"].transform("nunique")
+df["non_discounted_sales_rate"] = df["Total Qty Sold"] / df.groupby(["Product ID", "Hub ID Fulfilled"])["Date"].transform("nunique")
 
-    # Merge discount sales with discount prices (keeping Date)
-    df = discount_sales.merge(
-        discount_prices[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]],
-        on=["Date", "Product ID"],
-        how="left"
-    ).merge(
-        normal_sales, on=["Date","Hub ID Order","Hub Name Order","Hub ID Fulfilled","Location Name Fulfilled","Product ID","Product Name","SKU Number","L1 Category","Qty sold Discounted Price","Total Price Cut (IDR)"], how="left"
-    )
+# Take-up rate calculation
+df["take_up_rate"] = df["discounted_sales_rate"] / df["non_discounted_sales_rate"]
 
-    # Compute discount percentage
-    df["Price"] = df["Price"].replace(0, float("nan"))  # Avoid division by zero
-    df["discount_percentage"] = df["Flushout Discount (IDR)"] / df["Price"]
-    st.write(df.head())
-    # Compute daily sales rates
-    df["discounted_sales_rate"] = df["Qty sold Discounted Price"]
-    df["non_discounted_sales_rate"] = df["Total Qty Sold"]
-
-    # Compute take-up rate (per date)
-    df["take_up_rate"] = df["discounted_sales_rate"] / df["non_discounted_sales_rate"]
 
     ### **Find Best Discount Percentage (Ignoring Date)**
     df_best = df.groupby(["Product ID", "Hub ID Fulfilled"]).agg({
