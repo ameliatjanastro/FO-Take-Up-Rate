@@ -31,20 +31,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Sort discount prices by date (most recent first)
     #discount_prices_sorted = discount_prices.sort_values(by=["Date"], ascending=False)
 
-    df = discount_sales.merge(
-    discount_prices[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]],
-    on=["Date", "Product ID"],
-    how="left"
-)
     
-    # Ensure no missing columns before calculations
-    if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
-        df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
-        df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
-        df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
-    else:
-        st.error("Missing 'Flushout Discount (IDR)' or 'Price' column after merging. Check input files.")
-        st.stop()
     
 
     # Aggregate discount sales
@@ -60,8 +47,23 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ).reset_index()
 
     # Merge discount and normal sales data
-    df = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
+    df1 = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
+    df = df1.merge(
+    discount_prices[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]],
+    on=["Date", "Product ID"],
+    how="left"
+)
+    
+    # Ensure no missing columns before calculations
+    if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
+        df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
+        df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
+        df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
+    else:
+        st.error("Missing 'Flushout Discount (IDR)' or 'Price' column after merging. Check input files.")
+        st.stop()
 
+    
     # Compute discounted price
     #df["discounted_price"] = df["Price"] - df["Flushout Discount (IDR)"]
 
@@ -72,7 +74,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["take_up_rate"] = df["qty_sold"] / df["avg_qty_sold"]
     
     # Calculate Discount Percentage
-    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"])* 100
+    #df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"])* 100
 
     # Round for Display
     df["discount_percentage_display"] = df["discount_percentage"].round(2).astype(str) + "%"
