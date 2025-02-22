@@ -114,6 +114,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     ### Graph: Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate")
+
+    df_avg = df.groupby("L1 Category", as_index=False).agg({
+    "discount_percentage": "mean",
+    "take_up_rate": "mean"
+    })
     fig = px.scatter(
         df, x="discount_percentage", y="take_up_rate", color="L1 Category",
         hover_data=["Product ID", "Hub ID Fulfilled"], title="Effectiveness of Discounts"
