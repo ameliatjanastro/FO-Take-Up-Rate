@@ -47,13 +47,13 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ).reset_index()
 
     # Merge discount and normal sales data
-    df1 = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
-    df = df1.merge(
+    
+    df1 = discount_grouped.merge(
     discount_prices[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]],
     on=["Date", "Product ID"],
     how="left"
 )
-    
+    df = discount_grouped.merge(normal_grouped, on=["Product ID", "Hub ID Fulfilled"], how="left")
     # Ensure no missing columns before calculations
     #if "Flushout Discount (IDR)" in df.columns and "Price" in df.columns:
         #df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
@@ -71,9 +71,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df.fillna(0, inplace=True)
 
     # Calculate Take-up Rate (Comparing daily sales rates)
-    #df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
-    #df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
-    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
+    df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
+    df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
+    df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"])
     df["take_up_rate"] = df["qty_sold"] / df["avg_qty_sold"]
     
     # Calculate Discount Percentage
