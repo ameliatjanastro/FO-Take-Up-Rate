@@ -39,7 +39,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
 
     df["discount_percentage_display"] = df["discount_percentage"].round(2).astype(str) + "%"
-    df["take_up_rate_display"] = (df["take_up_rate"].round(2).astype(str))*100 + "%"
+    df["take_up_rate_display"] = (df["take_up_rate"]*100).round(2).astype(str) + "%"
     # Display Results
     st.subheader("Results")
     st.dataframe(df[["Product ID", "Hub ID Fulfilled", "take_up_rate_display", "discount_percentage_display"]])
