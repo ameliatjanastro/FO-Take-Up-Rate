@@ -28,7 +28,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
 
     # Calculate discount percentage
-    df["discount_percentage"] = df["Flushout Discount (IDR)"] / df["Price"]
+    df["discount_percentage"] = (df["Flushout Discount (IDR)"]/df["Qty sold Discounted Price"]) / df["Price"]
 
     # Aggregate sales data per product & hub (for independent best discount calculation)
     agg_df = df.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
