@@ -71,8 +71,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df.fillna(0, inplace=True)
 
     # Calculate Take-up Rate (Comparing daily sales rates)
-    df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
-    df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
+    #df["Flushout Discount (IDR)"] = df["Flushout Discount (IDR)"].fillna(0)
+    #df["Price"] = df["Price"].replace(0, float("nan"))  # Prevent division by zero
     df["discount_percentage"] = (df["Price"]-(df["Price"]-df["Flushout Discount (IDR)"])) / df["Price"]
     df["take_up_rate"] = df["qty_sold"] / df["avg_qty_sold"]
     
