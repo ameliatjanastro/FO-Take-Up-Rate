@@ -37,6 +37,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Calculate Take-up Rate
     df["take_up_rate"] = df["discounted_sales_rate"] / df["non_discounted_sales_rate"]
     df["discount_percentage"] = (df["Flushout Discount (IDR)"] / df["Price"]) * 100
+
+    df["discount_percentage_display"] = df["discount_percentage"].round(2).astype(str) + "%"
+    df["take_up_rate_display"] = df["take_up_rate"].round(2).astype(str) + "%"
     # Display Results
     st.subheader("Results")
     st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate","discount_percentage"]])
