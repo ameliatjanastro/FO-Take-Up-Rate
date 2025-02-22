@@ -18,7 +18,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     discount_prices = pd.read_csv(discount_price_file, usecols=["Date","Product ID", "Price", "Flushout Discount (IDR)", "L1 Category","Qty sold Discounted Price"])
 
     # Merge sales data with discount price data
-    df = discount_sales.merge(discount_prices, on=["Date","Product ID","Qty sold Discounted Price"] how="left")
+    df = discount_sales.merge(discount_prices, on=["Date","Product ID","Qty sold Discounted Price"], how="left")
     df = df.merge(normal_sales, on=["Date", "Product ID", "Hub ID Fulfilled"], how="left")
 
     # Fill missing values
