@@ -23,10 +23,10 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     # Get the most recent discount price per product
     #discount_prices_sorted = discount_prices.sort_values(by=["Date"], ascending=False)
-    discount_prices_latest = discount_prices.drop_duplicates(subset=["product_id", "hub_id"], keep="first")
+    #discount_prices_latest = discount_prices.drop_duplicates(subset=["product_id", "hub_id"], keep="first")
     
     # Compute discounted price
-    discount_prices_latest["discounted_price"] = discount_prices_latest["normal_price"] - discount_prices_latest["discount_amount"]
+    discount_prices["discounted_price"] = discount_prices["normal_price"] - discount_prices["discount_amount"]
 
     # Aggregate sales data
     discount_grouped = discount_sales.groupby(["product_id", "hub_id"]).agg(
@@ -40,7 +40,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     ).reset_index()
     
     # Merge Data
-    df = discount_grouped.merge(discount_prices_latest[["product_id", "normal_price", "discounted_price", "discount_amount", "l1_category", "hub_id"]], 
+    df = discount_grouped.merge(discount_prices[["product_id", "normal_price", "discounted_price", "discount_amount", "l1_category", "hub_id"]], 
                                 on=["product_id", "hub_id"], how="left")
     df = df.merge(normal_grouped, on=["product_id", "hub_id"], how="left")
 
