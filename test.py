@@ -48,7 +48,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Merge best discount info back into df for detailed date view
     df = df.merge(agg_df[["Product ID", "Hub ID Fulfilled", "avg_discount_percentage", "take_up_rate"]], on=["Product ID", "Hub ID Fulfilled"], how="left")
-
+    df_best = df.groupby(["Product ID", "Hub ID Fulfilled"]).agg({
+        "discount_percentage": "max",  # Best discount found
+        "take_up_rate": "max"  # Best take-up rate found
+    }).reset_index()
+    df = df.merge(df_best, on=["Product ID", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
     ### Sidebar Filters ###
     st.sidebar.subheader("Filters")
 
@@ -58,20 +62,21 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Multi-select for Hub ID
     hub_options = sorted(df["Hub ID Fulfilled"].dropna().astype(str).unique().tolist())
-    hub_filter = st.sidebar.multiselect("Select Hub ID", hub_options, default=hub_options)
+    hub_filter = st.sidebar.selectbox("Select Hub ID", ["All"] + hub_options)
 
     # Apply filters
     df = df[df["L1 Category"].isin(category_filter)]
     df = df[df["Hub ID Fulfilled"].astype(str).isin(hub_filter)]
 
     ### Display Results ###
+    
     st.subheader("Take-up Rate Data (With Dates)")
-    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate", "discount_percentage"]])
+    st.dataframe(df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate", "discount_percentage","discount_percentage_best", "take_up_rate_best"]])
 
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
 
-    df_avg = df.groupby("L1 Category", as_index=False).agg({
+    df_avg = df.groupby(["L1 Category","Hub ID Fulfilled"] as_index=False).agg({
         "avg_discount_percentage": "mean",
         "take_up_rate": "mean"
     })
