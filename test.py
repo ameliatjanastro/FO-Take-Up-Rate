@@ -42,7 +42,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["take_up_rate_display"] = df["take_up_rate"].round(2).astype(str) + "%"
     # Display Results
     st.subheader("Results")
-    st.dataframe(df[["product_id", "location_id", "take_up_rate_display", "discount_percentage_display"]])
+    st.dataframe(df[["Product ID", "Hub ID Fulfilled", "take_up_rate_display", "discount_percentage_display"]])
 
     # Export CSV (keep decimal format)
     export_df = df[["product_id", "location_id", "take_up_rate", "discount_percentage"]]
