@@ -53,7 +53,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.sidebar.subheader("Filters")
 
     # Multi-select for L1 Category
-    category_options = sorted(df["L1 Category"].dropna().unique().tolist())
+    category_options = sorted(df["L1 Category"].dropna().astype(str).unique().tolist())
     category_filter = st.sidebar.multiselect("Select L1 Category", category_options, default=category_options)
 
     # Multi-select for Hub ID
