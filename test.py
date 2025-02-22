@@ -21,7 +21,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     discount_prices = discount_prices.rename(columns=lambda x: x.strip())
 
     # Ensure column names are correct
-    expected_columns = ["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category", "Hub ID Fulfilled"]
+    expected_columns = ["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]
     missing_cols = [col for col in expected_columns if col not in discount_prices.columns]
     
     if missing_cols:
@@ -33,7 +33,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     # Merge discount sales with correct discount prices (matching Date + Product ID + Hub ID)
     discount_sales = discount_sales.merge(
-        discount_prices_sorted[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category", "Hub ID Fulfilled"]],
+        discount_prices_sorted[["Date", "Product ID", "Price", "Flushout Discount (IDR)", "L1 Category"]],
         on=["Date", "Product ID"],
         how="left"
     )
