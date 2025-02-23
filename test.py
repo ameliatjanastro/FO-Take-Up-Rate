@@ -83,11 +83,23 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
+    df["avg_discount_percentage"] = df["avg_discount_percentage"].replace([float("inf"), float("-inf")], 0).fillna(0)
     df["FO Discount %"] = (df["avg_discount_percentage"]*100).round(2).astype(str) + "%"
     df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
     df["Take Up Rate Performance"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
     df = df.sort_values(by=["Product ID", "Product Name","take_up_rate_best"], ascending=[True, True, True])
     selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
+
+    st.markdown(
+    """
+    <style>
+    .stDataFrame { font-size: 12px !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+
+
     
     #st.dataframe(df[selected_columns], hide_index=True)
     #df_view = df[selected_columns].drop_duplicates()
@@ -108,7 +120,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     })
     
     # Display styled dataframe in Streamlit
-    st.dataframe(styled_df, hide_index=True)
+    st.dataframe(styled_df, hide_index=True, use_container_width=True)
         
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
