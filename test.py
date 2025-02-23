@@ -156,7 +156,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     )
     
     # Adjust text position to be on the left of the bars
-    fig.update_traces(textposition="outside")  
+    fig.update_traces(textposition="inside")  
     
     # Extend x-axis to zoom out the chart (adds padding)
     max_take_up_rate = df_avg["take_up_rate_best"].max()
