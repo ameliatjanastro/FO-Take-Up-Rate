@@ -90,20 +90,21 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
     df["Take Up Rate Performance"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
     df = df.sort_values(by=["Product ID", "Product Name","take_up_rate_best"], ascending=[True, True, True])
+    selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
 
     #st.dataframe(df[selected_columns], hide_index=True)
     # Get the minimum and maximum date from the dataset
+
     
     # Display the date range at the top
     st.markdown(f"<h6 style='text-align: left; color: red;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
     #df_view = df[selected_columns].drop_duplicates()
 
-    df_view = df.drop_duplicates(subset=["Product ID"]).copy()
+    df_view = df[selected_columns].drop_duplicates().copy()
     
     # Convert "Take Up Rate Performance" to float (remove % sign first)
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
     
-    selected_columns = ["Product ID", "Product Name", "FO Discount %", "Take Up Rate Performance"]
     def highlight_low_take_up_rate(row):
         if row["Take Up Rate Performance"] < 0.4:
             return ["background-color: #FBCEB1"] * len(row)  # Light Red for full row
@@ -113,19 +114,6 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     styled_df = df_view.style.apply(highlight_low_take_up_rate, axis=1).format({
         "Take Up Rate Performance": "{:.2%}".format
     })
-    
-    # Display styled dataframe in Streamlit
-    st.data_editor(
-        df_view, 
-        hide_index=True, 
-        use_container_width=True,
-        column_config={
-            "Product ID": st.column_config.TextColumn(width="80px"),
-            "Product Name": st.column_config.TextColumn(width="300px"),
-            "FO Discount %": st.column_config.TextColumn(width="80px"),
-            "Take Up Rate Performance": st.column_config.TextColumn(width="80px"),
-        }
-    )
 
     st.markdown(
     """
@@ -136,6 +124,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     unsafe_allow_html=True
     )
 
+    
+    # Display styled dataframe in Streamlit
     st.dataframe(styled_df, hide_index=True, use_container_width=True)
         
     ### Graph: Average Discount Percentage vs Take-up Rate ###
