@@ -100,23 +100,27 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     df_avg["discount_label"] = (df_avg["discount_percentage"]*100).round(2).astype(str) + "%"
 
+    df_avg = df_avg.sort_values(by="take_up_rate_best", ascending=True)
+
     # Create a horizontal bar chart
     fig = px.bar(
         df_avg, 
         x="take_up_rate_best", 
         y="L1 Category", 
         orientation="h",  # Horizontal bar chart
-        title="Effectiveness of Discounts (Averaged by L1 Category)",
+        title="Effectiveness of Discounts (Highest Take-up Rate by L1 Category)",
         text="discount_label",  # Show discount percentage as text
     )
     
     # Adjust text position to be on the left of the bars
     fig.update_traces(textposition="outside")  
     
-    # Format axes
+    # Extend x-axis to zoom out the chart (adds padding)
+    max_take_up_rate = df_avg["take_up_rate_best"].max()
     fig.update_layout(
         xaxis_title="Take-up Rate (%)",
         yaxis_title="L1 Category",
+        xaxis=dict(range=[0, max_take_up_rate * 1.2]),  # 20% extra space on the right
     )
     
     # Show the chart in Streamlit
