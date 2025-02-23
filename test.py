@@ -100,7 +100,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     fig = px.scatter(
         df_avg, 
-        x="discount_percentage_best", 
+        x="discount_percentage", 
         y="take_up_rate_best", 
         text="L1 Category",  
         title="Effectiveness of Discounts (Averaged by L1 Category)"
