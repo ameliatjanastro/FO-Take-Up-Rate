@@ -82,9 +82,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.markdown("Best Discount % with highest Take-up Rate L14")
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
-    df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
     date_min = df["Date"].min().strftime("%Y-%m-%d")
     date_max = df["Date"].max().strftime("%Y-%m-%d")
+    df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
     df["avg_discount_percentage"] = df["avg_discount_percentage"].replace([float("inf"), float("-inf")], 0).fillna(0)
     df["FO Discount %"] = (df["avg_discount_percentage"]*100).round(2).astype(str) + "%"
     df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
