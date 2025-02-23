@@ -78,8 +78,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df = df[df["Hub ID Fulfilled"].astype(str) == selected_hub_id]
 
     ### Display Results ###
-        
-    st.markdown("Best Discount % with highest Take-up Rate L14")
+    st.markdown("----")    
+    st.subheader("Best Discount % with highest Take-up Rate L14")
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
     date_min = df["Date"].min().strftime("%Y-%m-%d")
@@ -97,7 +97,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     
     # Display the date range at the top
-    st.subheader(f"<h6 style='text-align: center; color: black;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
+    st.markdown(f"<h6 style='text-align: center; color: black;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
     #df_view = df[selected_columns].drop_duplicates()
 
     df_view = df[selected_columns].drop_duplicates().copy()
