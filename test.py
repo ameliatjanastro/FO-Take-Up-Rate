@@ -105,6 +105,19 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Convert "Take Up Rate Performance" to float (remove % sign first)
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
     
+    
+    # Display styled dataframe in Streamlit
+    st.data_editor(
+        styled_df, 
+        hide_index=True, 
+        use_container_width=True,
+        column_config={
+            "Product ID": st.column_config.NumberColumn(width=80),
+            "Product Name": st.column_config.TextColumn(width=300),
+            "FO Discount %": st.column_config.TextColumn(width=80),
+            "Take Up Rate Performance": st.column_config.TextColumn(width=80),
+        }
+    )
     def highlight_low_take_up_rate(row):
         if row["Take Up Rate Performance"] < 0.4:
             return ["background-color: #FBCEB1"] * len(row)  # Light Red for full row
@@ -124,19 +137,6 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     unsafe_allow_html=True
     )
 
-    
-    # Display styled dataframe in Streamlit
-    st.data_editor(
-        styled_df, 
-        hide_index=True, 
-        use_container_width=True,
-        column_config={
-            "Product ID": st.column_config.NumberColumn(width="small"),
-            "Product Name": st.column_config.TextColumn(width="medium"),
-            "FO Discount %": st.column_config.NumberColumn(width="small"),
-            "Take Up Rate Performance": st.column_config.NumberColumn(format="%.2f%%", width="small"),
-        }
-    )
     st.dataframe(styled_df, hide_index=True, use_container_width=True)
         
     ### Graph: Average Discount Percentage vs Take-up Rate ###
