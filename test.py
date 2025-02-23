@@ -123,7 +123,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.dataframe(styled_df, hide_index=True, use_container_width=True)
         
     ### Graph: Average Discount Percentage vs Take-up Rate ###
-    st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
+    st.subheader("Best Discount % vs. Take-up Rate (Avg. L1 Category)")
     
     df_avg = df.groupby("L1 Category", as_index=False).agg({
         "discount_percentage": "mean",
