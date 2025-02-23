@@ -83,7 +83,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
-    df["FO Discount %"] = (df["discount_percentage"]*100).round(2).astype(str) + "%"
+    df["FO Discount %"] = (df["avg_discount_percentage"]*100).round(2).astype(str) + "%"
     df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
     df["Take Up Rate Performance"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
     selected_columns = [col for col in ["Date", "Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
