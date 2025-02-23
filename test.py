@@ -92,8 +92,23 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     #st.dataframe(df[selected_columns], hide_index=True)
     df_view = df[selected_columns].drop_duplicates()
 
-    # Display the dataframe without modifying the original data
-    st.dataframe(df_view, hide_index=True)
+    df_view = df[selected_columns].drop_duplicates().copy()
+    df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
+    
+    # Function to apply row-based styling
+    def highlight_low_takeup(val):
+        color = 'background-color: #FFCCCB' if val < 0.4 else ''
+        return color
+
+    # Apply styling to the dataframe
+    styled_df = df_view.style.applymap(highlight_low_takeup, subset=["Take Up Rate Performance"])
+    
+    # Format the column back to percentage display
+    styled_df = styled_df.format({"Take Up Rate Performance": "{:.2%}".format})
+    
+    # Display styled dataframe
+    st.dataframe(styled_df, hide_index=True)
+    
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
     
