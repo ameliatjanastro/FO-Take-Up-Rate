@@ -148,7 +148,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         df_avg,
         x="take_up_rate_best",
         y="L1 Category",
-        text=df_avg["discount_percentage_best"].apply(lambda x: f"{x:.2%}"),  # Show discount % on bars
+        text=df_avg["discount_percentage"].apply(lambda x: f"{x:.2%}"),  # Show discount % on bars
         orientation="h",
         title="Best Take-up Rate by L1 Category",
         color=df_avg["bar_color"],  # Assign conditional colors
