@@ -93,7 +93,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.markdown(
     """
     <style>
-    .stDataFrame { font-size: 12px !important; }
+    .stDataFrame { font-size: 10px !important; }
     </style>
     """,
     unsafe_allow_html=True
