@@ -105,9 +105,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     selected_columns = ["Product ID", "Product Name", "FO Discount %", "Take Up Rate Performance"]
     def highlight_low_take_up_rate(row):
-    if row["Take Up Rate Performance"] < 0.4:
-        return ["background-color: #FBCEB1"] * len(row)  # Light Red for full row
-    return [""] * len(row)
+        if row["Take Up Rate Performance"] < 0.4:
+            return ["background-color: #FBCEB1"] * len(row)  # Light Red for full row
+        return [""] * len(row)
 
     # Apply styling to the dataframe
     styled_df = df_view.style.apply(highlight_low_take_up_rate, axis=1).format({
