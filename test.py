@@ -97,6 +97,30 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         "discount_percentage": "mean",
         "take_up_rate_best": "mean"
     })
+
+    df_avg["discount_label"] = df_avg["discount_percentage"].round(2).astype(str) + "%"
+
+    # Create a horizontal bar chart
+    fig = px.bar(
+        df_avg, 
+        x="take_up_rate_best", 
+        y="L1 Category", 
+        orientation="h",  # Horizontal bar chart
+        title="Effectiveness of Discounts (Averaged by L1 Category)",
+        text="discount_label",  # Show discount percentage as text
+    )
+    
+    # Adjust text position to be on the left of the bars
+    fig.update_traces(textposition="outside")  
+    
+    # Format axes
+    fig.update_layout(
+        xaxis_title="Take-up Rate (%)",
+        yaxis_title="L1 Category",
+    )
+    
+    # Show the chart in Streamlit
+    st.plotly_chart(fig)
     
     fig = px.scatter(
         df_avg, 
