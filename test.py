@@ -5,6 +5,15 @@ import plotly.express as px
 # Streamlit App Title
 st.title("SC Flushout vs Take-up Rate")
 
+st.markdown(
+"""
+<style>
+.stDataFrame { font-size: 9px !important; }
+</style>
+""",
+unsafe_allow_html=True
+)
+
 # Sidebar: Upload CSV files
 st.sidebar.header("Upload Data")
 discount_sales_file = st.sidebar.file_uploader("Upload Discount Sales CSV", type=["csv"])
@@ -90,17 +99,6 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df = df.sort_values(by=["Product ID", "Product Name","take_up_rate_best"], ascending=[True, True, True])
     selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
 
-    st.markdown(
-    """
-    <style>
-    .stDataFrame { font-size: 9px !important; }
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
-
-
-    
     #st.dataframe(df[selected_columns], hide_index=True)
     #df_view = df[selected_columns].drop_duplicates()
 
