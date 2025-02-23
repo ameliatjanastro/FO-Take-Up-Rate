@@ -79,7 +79,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     ### Display Results ###
     st.markdown("----")    
-    st.subheader("Best Discount % with highest Take-up Rate L14")
+    st.subheader("Best Discount % with highest Take-up Rate")
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
     date_min = df["Date"].min().strftime("%Y-%m-%d")
