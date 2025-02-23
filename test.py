@@ -32,7 +32,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["discount_percentage"] = (df["Flushout Discount (IDR)"]/df["Total Sales (Qty)"]) / df["Price"]
 
     # Aggregate sales data per product & hub (for independent best discount calculation)
-    agg_df = df.groupby(["Product ID", "Hub ID Fulfilled"]).agg(
+    agg_df = df.groupby(["Product ID", "Product Name", "Hub ID Fulfilled"]).agg(
         total_discounted_sales=("Qty sold Discounted Price", "sum"),
         total_non_discounted_sales=("Total Qty Sold", "sum"),
         discount_days=("Date", "nunique"),
@@ -48,11 +48,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     agg_df["take_up_rate"] = agg_df["discounted_sales_rate"] / agg_df["non_discounted_sales_rate"]
 
     # Merge best discount info back into df for detailed date view
-    df = df.merge(agg_df[["Product ID", "Hub ID Fulfilled", "avg_discount_percentage", "take_up_rate"]], on=["Product ID", "Hub ID Fulfilled"], how="left")
-    df_best = df.groupby(["Product ID", "Hub ID Fulfilled"]).agg({
+    df = df.merge(agg_df[["Product ID", "Product Name", "Hub ID Fulfilled", "avg_discount_percentage", "take_up_rate"]], on=["Product ID", "Product Name", "Hub ID Fulfilled"], how="left")
+    df_best = df.groupby(["Product ID", "Product Name", "Hub ID Fulfilled"]).agg({
         "take_up_rate": "max"  # Best take-up rate found
     }).reset_index()
-    df = df.merge(df_best, on=["Product ID", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
+    df = df.merge(df_best, on=["Product ID", "Product Name", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
 
     
     
