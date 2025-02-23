@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # Streamlit App Title
-st.title("Campaign Take-up Rate Calculator")
+st.title("SC Flushout vs Take-up Rate")
 
 # Sidebar: Upload CSV files
 st.sidebar.header("Upload Data")
