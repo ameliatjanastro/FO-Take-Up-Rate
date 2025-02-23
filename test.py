@@ -90,11 +90,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
     df["Take Up Rate Performance"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
     df = df.sort_values(by=["Product ID", "Product Name","take_up_rate_best"], ascending=[True, True, True])
-    selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
 
     #st.dataframe(df[selected_columns], hide_index=True)
     # Get the minimum and maximum date from the dataset
-
     
     # Display the date range at the top
     st.markdown(f"<h6 style='text-align: left; color: red;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
@@ -105,7 +103,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Convert "Take Up Rate Performance" to float (remove % sign first)
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
     
-    
+    selected_columns = ["Product ID", "Product Name", "FO Discount %", "Take Up Rate Performance"]
     # Display styled dataframe in Streamlit
     st.data_editor(
         df_view[selected_columns], 
@@ -118,6 +116,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
             "Take Up Rate Performance": st.column_config.TextColumn(width=80),
         }
     )
+    
     def highlight_low_take_up_rate(row):
         if row["Take Up Rate Performance"] < 0.4:
             return ["background-color: #FBCEB1"] * len(row)  # Light Red for full row
