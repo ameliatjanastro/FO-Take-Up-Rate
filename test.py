@@ -98,7 +98,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     st.markdown(f"<h6 style='text-align: left; color: red;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
     #df_view = df[selected_columns].drop_duplicates()
 
-    df_view = df[selected_columns].drop_duplicates().copy()
+    df_view = df.drop_duplicates().copy()
     
     # Convert "Take Up Rate Performance" to float (remove % sign first)
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
