@@ -127,7 +127,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     # Display styled dataframe in Streamlit
     st.data_editor(
-        styled_df[selected_columns], 
+        styled_df, 
         hide_index=True, 
         use_container_width=True,
         column_config={
