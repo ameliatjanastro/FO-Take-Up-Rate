@@ -16,9 +16,9 @@ unsafe_allow_html=True
 
 # Sidebar: Upload CSV files
 st.sidebar.header("Upload Data")
-discount_sales_file = st.sidebar.file_uploader("Upload Discount Sales CSV", type=["csv"])
-discount_price_file = st.sidebar.file_uploader("Upload Discount Price CSV", type=["csv"])
-normal_sales_file = st.sidebar.file_uploader("Upload Normal Sales CSV", type=["csv"])
+discount_sales_file = st.sidebar.file_uploader("Upload FO Sales Data", type=["csv"])
+discount_price_file = st.sidebar.file_uploader("Upload FO Price Reduction", type=["csv"])
+normal_sales_file = st.sidebar.file_uploader("Upload Normal Sales Data", type=["csv"])
 
 if discount_sales_file and discount_price_file and normal_sales_file:
     # Load only required columns
