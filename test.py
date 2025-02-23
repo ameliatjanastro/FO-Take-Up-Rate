@@ -4,7 +4,12 @@ import plotly.express as px
 
 # Streamlit App Title
 st.title("SC Flushout vs Take-up Rate")
-st.markdown(f"<h8 style='text-align: left> Use this dashboard: https://lookerstudio.google.com/u/0/reporting/e8b43387-02b8-4a0f-82bb-d1d378a41cf7/page/p_6n6ziqae9c</h8>")
+st.markdown(
+    f"<h6 style='text-align: left;'>Use this dashboard: "
+    f"<a href='https://lookerstudio.google.com/u/0/reporting/e8b43387-02b8-4a0f-82bb-d1d378a41cf7/page/p_6n6ziqae9c' "
+    f"target='_blank'>Click here</a></h6>", 
+    unsafe_allow_html=True
+)
 
 # Sidebar: Upload CSV files
 st.sidebar.header("Upload Data")
