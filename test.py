@@ -79,7 +79,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     ### Display Results ###
         
-    st.subheader("Take-up Rate Data (With Dates)")
+    st.subheader("Best Discount % with highest Take-up Rate L14")
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
@@ -98,9 +98,9 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
     
     def highlight_low_take_up_rate(row):
-    if row["Take Up Rate Performance"] < 0.4:
-        return ["background-color: #FFCCCB"] * len(row)  # Light Red for full row
-    return [""] * len(row)
+        if row["Take Up Rate Performance"] < 0.4:
+            return ["background-color: #FFCCCB"] * len(row)  # Light Red for full row
+        return [""] * len(row)
 
     # Apply styling to the dataframe
     styled_df = df_view.style.apply(highlight_low_take_up_rate, axis=1).format({
