@@ -72,12 +72,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     hub_options = sorted(df["Hub Selection"].dropna().unique().tolist())
 
     # Sidebar selection with combined values
-    hub_filter = st.sidebar.selectbox("Select Hub ID & Location", ["All"] + hub_options)
+    hub_filter = st.sidebar.selectbox("Select Hub ID & Location", hub_options)
 
     # Apply filter
-    if hub_filter != "All":
-        selected_hub_id = hub_filter.split(" - ")[0]  # Extract Hub ID
-        df = df[df["Hub ID Fulfilled"].astype(str) == selected_hub_id]
+    selected_hub_id = hub_filter.split(" - ")[0]  # Extract Hub ID
+    df = df[df["Hub ID Fulfilled"].astype(str) == selected_hub_id]
 
         ### Display Results ###
         
