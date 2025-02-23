@@ -97,27 +97,18 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Convert "Take Up Rate Performance" to float (remove % sign first)
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
     
-    # Function to apply row-based styling
-    def highlight_rows(row):
+    def highlight_low_take_up_rate(row):
     if row["Take Up Rate Performance"] < 0.4:
-        return "background-color: #FFCCCB"  # Light Red
-    return ""
+        return ["background-color: #FFCCCB"] * len(row)  # Light Red for full row
+    return [""] * len(row)
 
-    # Create a Streamlit dataframe with conditional formatting
-    st.data_editor(
-        df_view, 
-        hide_index=True, 
-        column_config={
-            "Take Up Rate Performance": st.column_config.NumberColumn(
-                format="%.2f%%", width="small",
-                help="Take-up rate below 40% is highlighted"
-            )
-        },
-        height=500,
-        row_styles=[
-            {"if": {"filter_query": "`Take Up Rate Performance` < 0.4"}, "backgroundColor": "#FFCCCB"}
-        ]
-    )
+    # Apply styling to the dataframe
+    styled_df = df_view.style.apply(highlight_low_take_up_rate, axis=1).format({
+        "Take Up Rate Performance": "{:.2%}".format
+    })
+    
+    # Display styled dataframe in Streamlit
+    st.dataframe(styled_df, hide_index=True)
         
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
