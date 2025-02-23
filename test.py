@@ -92,17 +92,6 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df = df.sort_values(by=["Product ID", "Product Name","take_up_rate_best"], ascending=[True, True, True])
     selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
 
-    st.data_editor(
-        df_view[selected_columns], 
-        hide_index=True, 
-        use_container_width=True,
-        column_config={
-            "Product ID": st.column_config.NumberColumn(width="small"),
-            "Product Name": st.column_config.TextColumn(width="medium"),
-            "FO Discount %": st.column_config.NumberColumn(width="small"),
-            "Take Up Rate Performance": st.column_config.NumberColumn(format="%.2f%%", width="small"),
-        }
-    )
     #st.dataframe(df[selected_columns], hide_index=True)
     # Get the minimum and maximum date from the dataset
 
@@ -137,6 +126,17 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     
     # Display styled dataframe in Streamlit
+    st.data_editor(
+        styled_df[selected_columns], 
+        hide_index=True, 
+        use_container_width=True,
+        column_config={
+            "Product ID": st.column_config.NumberColumn(width="small"),
+            "Product Name": st.column_config.TextColumn(width="medium"),
+            "FO Discount %": st.column_config.NumberColumn(width="small"),
+            "Take Up Rate Performance": st.column_config.NumberColumn(format="%.2f%%", width="small"),
+        }
+    )
     st.dataframe(styled_df, hide_index=True, use_container_width=True)
         
     ### Graph: Average Discount Percentage vs Take-up Rate ###
