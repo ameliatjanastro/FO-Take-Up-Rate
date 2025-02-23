@@ -158,7 +158,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     
     ### Export CSV ###
-    export_df = df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate_best", "avg_discount_percentage"]]
+    export_df = df[["Date", "Product ID", "Hub ID Fulfilled", "avg_discount_percentage", "take_up_rate_best"]]
     st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
 else:
