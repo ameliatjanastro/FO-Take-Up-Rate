@@ -132,32 +132,18 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     df_avg = df_avg.sort_values(by="take_up_rate_best", ascending=True)
 
-    # Define color based on take-up rate thresholds
-    def get_bar_color(rate):
-        if rate > 0.7:
-            return "green"
-        elif rate < 0.4:
-            return "red"
-        return "blue"
-    
-    df_avg["bar_color"] = df_avg["take_up_rate_best"].apply(get_bar_color)
-
-
-    # Create a horizontal bar chart
     fig = px.bar(
-        df_avg,
-        x="take_up_rate_best",
+        df_avg, 
+        x="take_up_rate_best", 
         y="L1 Category", 
         orientation="h",  # Horizontal bar chart
-        title="Effectiveness of Discounts (Highest Take-up Rate by L1 Category)",
+        title="Effectiveness of Discounts (Averaged by L1 Category)",
         text="discount_label",  # Show discount percentage as text
-        color=df_avg["bar_color"],  # Assign conditional colors
-        color_discrete_map="identity",  # Forces the use of custom colors
     )
     
     # Adjust text position to be on the left of the bars
-    fig.update_traces(textposition="inside")  
-    
+    fig.update_traces(textposition="outside")  
+
     # Extend x-axis to zoom out the chart (adds padding)
     max_take_up_rate = df_avg["take_up_rate_best"].max()
     fig.update_layout(
