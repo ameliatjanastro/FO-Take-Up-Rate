@@ -83,6 +83,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
+    date_min = df["Date"].min().strftime("%Y-%m-%d")
+    date_max = df["Date"].max().strftime("%Y-%m-%d")
     df["avg_discount_percentage"] = df["avg_discount_percentage"].replace([float("inf"), float("-inf")], 0).fillna(0)
     df["FO Discount %"] = (df["avg_discount_percentage"]*100).round(2).astype(str) + "%"
     df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
@@ -92,8 +94,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     #st.dataframe(df[selected_columns], hide_index=True)
     # Get the minimum and maximum date from the dataset
-    date_min = df["Date"].min()
-    date_max = df["Date"].max()
+
     
     # Display the date range at the top
     st.subheader(f"<h6 style='text-align: center; color: black;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
