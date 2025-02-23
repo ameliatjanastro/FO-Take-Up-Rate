@@ -98,7 +98,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         "take_up_rate_best": "mean"
     })
 
-    df_avg["discount_label"] = df_avg["discount_percentage"].round(2).astype(str) + "%"
+    df_avg["discount_label"] = (df_avg["discount_percentage"]*100).round(2).astype(str) + "%"
 
     # Create a horizontal bar chart
     fig = px.bar(
