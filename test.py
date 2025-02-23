@@ -5,15 +5,6 @@ import plotly.express as px
 # Streamlit App Title
 st.title("SC Flushout vs Take-up Rate")
 
-st.markdown(
-"""
-<style>
-.stDataFrame { font-size: 9px !important; }
-</style>
-""",
-unsafe_allow_html=True
-)
-
 # Sidebar: Upload CSV files
 st.sidebar.header("Upload Data")
 discount_sales_file = st.sidebar.file_uploader("Upload FO Sales Data", type=["csv"])
@@ -116,12 +107,22 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     styled_df = df_view.style.apply(highlight_low_take_up_rate, axis=1).format({
         "Take Up Rate Performance": "{:.2%}".format
     })
+
+    st.markdown(
+    """
+    <style>
+    .stDataFrame { font-size: 9px !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+
     
     # Display styled dataframe in Streamlit
     st.dataframe(styled_df, hide_index=True, use_container_width=True)
         
     ### Graph: Average Discount Percentage vs Take-up Rate ###
-    st.subheader("Best Discount % vs. Take-up Rate (Avg. L1 Category)")
+    #st.subheader("Best Discount % vs. Take-up Rate (Avg. L1 Category)")
     
     df_avg = df.groupby("L1 Category", as_index=False).agg({
         "discount_percentage": "mean",
