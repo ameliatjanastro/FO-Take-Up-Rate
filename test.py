@@ -81,7 +81,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         
     st.subheader("Take-up Rate Data (With Dates)")
     df.columns = df.columns.str.strip()
-    df["Product ID"] = sorted(df["Product ID"].astype(int))
+    df["Product ID"] = df["Product ID"].astype(int)
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
     df["FO Discount %"] = (df["avg_discount_percentage"]*100).round(2).astype(str) + "%"
     df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
