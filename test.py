@@ -92,8 +92,8 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     #st.dataframe(df[selected_columns], hide_index=True)
     # Get the minimum and maximum date from the dataset
-    date_min = df["Date"].min().strftime("%Y-%m-%d")
-    date_max = df["Date"].max().strftime("%Y-%m-%d")
+    date_min = df["Date"].min()
+    date_max = df["Date"].max()
     
     # Display the date range at the top
     st.subheader(f"<h6 style='text-align: center; color: black;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
