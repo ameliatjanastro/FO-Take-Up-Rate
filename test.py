@@ -96,12 +96,17 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
     
     # Function to apply row-based styling
-    def highlight_low_takeup(val):
-        color = 'background-color: #FFCCCB' if val < 0.4 else ''
-        return color
-
+   # Define color formatting for take-up rate column
+    def color_rows(df):
+        styles = []
+        for value in df["Take Up Rate Performance"]:
+            if value < 0.4:
+                styles.append("background-color: #FFCCCB")  # Light Red
+            else:
+                styles.append("")
+        return styles
     # Apply styling to the dataframe
-    styled_df = df_view.style.applymap(highlight_low_takeup, subset=["Take Up Rate Performance"])
+    styled_df = df_view.style.applymap(color_rows, subset=["Take Up Rate Performance"], axis=0)
     
     # Format the column back to percentage display
     styled_df = styled_df.format({"Take Up Rate Performance": "{:.2%}".format})
