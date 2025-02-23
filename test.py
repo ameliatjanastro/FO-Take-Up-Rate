@@ -130,16 +130,6 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     # Show the chart in Streamlit
     st.plotly_chart(fig)
     
-    fig = px.scatter(
-        df_avg, 
-        x="discount_percentage", 
-        y="take_up_rate_best", 
-        text="L1 Category",  
-        title="Effectiveness of Discounts (Averaged by L1 Category)"
-    )
-    
-    fig.update_traces(textposition="top center")
-    st.plotly_chart(fig)
     
     ### Export CSV ###
     export_df = df[["Date", "Product ID", "Hub ID Fulfilled", "take_up_rate_best", "avg_discount_percentage"]]
