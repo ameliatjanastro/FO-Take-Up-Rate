@@ -79,7 +79,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
 
     ### Display Results ###
         
-    st.subheader("Best Discount % with highest Take-up Rate L14")
+    st.markdown("Best Discount % with highest Take-up Rate L14")
     df.columns = df.columns.str.strip()
     df["Product ID"] = df["Product ID"].astype(int)
     df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
@@ -91,6 +91,12 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
 
     #st.dataframe(df[selected_columns], hide_index=True)
+    # Get the minimum and maximum date from the dataset
+    date_min = df["Date"].min().strftime("%Y-%m-%d")
+    date_max = df["Date"].max().strftime("%Y-%m-%d")
+    
+    # Display the date range at the top
+    st.subheader(f"<h6 style='text-align: center; color: black;'>Date Range: {date_min} to {date_max}</h6>", unsafe_allow_html=True)
     #df_view = df[selected_columns].drop_duplicates()
 
     df_view = df[selected_columns].drop_duplicates().copy()
