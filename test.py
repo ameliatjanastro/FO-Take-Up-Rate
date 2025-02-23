@@ -110,10 +110,10 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         hide_index=True, 
         use_container_width=True,
         column_config={
-            "Product ID": st.column_config.NumberColumn(width=80),
-            "Product Name": st.column_config.TextColumn(width=300),
-            "FO Discount %": st.column_config.TextColumn(width=80),
-            "Take Up Rate Performance": st.column_config.TextColumn(width=80),
+            "Product ID": st.column_config.NumberColumn(width="80px"),
+            "Product Name": st.column_config.TextColumn(width="300px"),
+            "FO Discount %": st.column_config.TextColumn(width="80px"),
+            "Take Up Rate Performance": st.column_config.TextColumn(width="80px"),
         }
     )
     
