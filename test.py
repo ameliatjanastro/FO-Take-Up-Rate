@@ -173,7 +173,10 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     ### Export CSV ###
     
-    export_df = df_unfiltered[["Date", "Product ID", "Hub ID Fulfilled", "avg_discount_percentage", "take_up_rate_best"]]
+    export_df = df_unfiltered[["Date", "Product ID", "Product Name", "Hub ID Fulfilled", "avg_discount_percentage", "take_up_rate_best"]]
+    export_df["avg_discount_percentage"] = export_df["avg_discount_percentage"].round(2)
+    export_df["take_up_rate_best"] = export_df["take_up_rate_best"].round(2)
+
     st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
 else:
