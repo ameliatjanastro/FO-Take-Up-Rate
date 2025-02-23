@@ -144,12 +144,12 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     })
 
     df_avg["discount_label"] = (df_avg["discount_percentage"]*100).round(2).astype(str) + "%"
-
+    df_avg["take_up_rate_label"] = (df_avg["take_up_rate_best"]*100).round(2).astype(str) + "%"
     df_avg = df_avg.sort_values(by="take_up_rate_best", ascending=True)
 
     fig = px.bar(
         df_avg, 
-        x="take_up_rate_best", 
+        x="take_up_rate_label", 
         y="L1 Category", 
         orientation="h",  # Horizontal bar chart
         title="Effectiveness of Discounts (Averaged by L1 Category)",
