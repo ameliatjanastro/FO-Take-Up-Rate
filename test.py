@@ -111,7 +111,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     def highlight_low_take_up_rate(row):
         if row["Take Up Rate Performance"] < 0.4:
-            return ["background-color: #FFCCCB"] * len(row)  # Light Red for full row
+            return ["background-color: #F5DDE0"] * len(row)  # Light Red for full row
         return [""] * len(row)
 
     # Apply styling to the dataframe
