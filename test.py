@@ -93,25 +93,23 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     #df_view = df[selected_columns].drop_duplicates()
 
     df_view = df[selected_columns].drop_duplicates().copy()
+    
+    # Convert "Take Up Rate Performance" to float (remove % sign first)
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
     
     # Function to apply row-based styling
-   # Define color formatting for take-up rate column
-    def color_rows(df):
-        styles = []
-        for value in df["Take Up Rate Performance"]:
-            if value < 0.4:
-                styles.append("background-color: #FFCCCB")  # Light Red
-            else:
-                styles.append("")
-        return styles
+    def color_rows(row):
+        if row["Take Up Rate Performance"] < 0.4:
+            return ["background-color: #FFCCCB"] * len(row)  # Light Red
+        return [""] * len(row)
+    
     # Apply styling to the dataframe
-    styled_df = df_view.style.applymap(color_rows, subset=["Take Up Rate Performance"], axis=0)
+    styled_df = df_view.style.apply(color_rows, axis=1)
     
-    # Format the column back to percentage display
-    styled_df = styled_df.format({"Take Up Rate Performance": "{:.2%}".format})
+    # Convert "Take Up Rate Performance" back to percentage format for display
+    df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].map(lambda x: f"{x:.2%}")
     
-    # Display styled dataframe
+    # Display styled dataframe (Use st.dataframe() for styling support)
     st.dataframe(styled_df, hide_index=True)
     
     ### Graph: Average Discount Percentage vs Take-up Rate ###
