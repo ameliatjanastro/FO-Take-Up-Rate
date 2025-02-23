@@ -59,6 +59,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         "take_up_rate": "max"  # Best take-up rate found
     }).reset_index()
     df = df.merge(df_best, on=["Product ID", "Product Name", "Hub ID Fulfilled"], how="left", suffixes=("", "_best"))
+    df_unfiltered = df.copy()
 
     
     
@@ -171,6 +172,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     
     
     ### Export CSV ###
+    
     export_df = df_unfiltered[["Date", "Product ID", "Hub ID Fulfilled", "avg_discount_percentage", "take_up_rate_best"]]
     st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
