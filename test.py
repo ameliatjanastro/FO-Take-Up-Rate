@@ -90,7 +90,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
     
     #st.dataframe(df[selected_columns], hide_index=True)
-    df_view = df[selected_columns].drop_duplicates()
+    #df_view = df[selected_columns].drop_duplicates()
 
     df_view = df[selected_columns].drop_duplicates().copy()
     df_view["Take Up Rate Performance"] = df_view["Take Up Rate Performance"].str.replace('%', '').astype(float) / 100
