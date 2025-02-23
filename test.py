@@ -78,41 +78,41 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     selected_hub_id = hub_filter.split(" - ")[0]  # Extract Hub ID
     df = df[df["Hub ID Fulfilled"].astype(str) == selected_hub_id]
 
-        ### Display Results ###
+    ### Display Results ###
         
-        st.subheader("Take-up Rate Data (With Dates)")
-        df.columns = df.columns.str.strip()
-        df["Product ID"] = df["Product ID"].astype(int)
-        df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
-        df["FO Discount %"] = (df["discount_percentage_best"]*100).round(2).astype(str) + "%"
-        df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
-        df["Take Up Rate Performance"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
-        selected_columns = [col for col in ["Date", "Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
+    st.subheader("Take-up Rate Data (With Dates)")
+    df.columns = df.columns.str.strip()
+    df["Product ID"] = df["Product ID"].astype(int)
+    df["Date"] = df["Date"].dt.strftime("%Y-%m-%d")
+    df["FO Discount %"] = (df["discount_percentage_best"]*100).round(2).astype(str) + "%"
+    df["take_up_rate_best"] = df["take_up_rate_best"].replace([float("inf"), float("-inf")], 0).fillna(0)
+    df["Take Up Rate Performance"] = (df["take_up_rate_best"] * 100).round(2).astype(str) + "%"
+    selected_columns = [col for col in ["Date", "Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
     
-        st.dataframe(df[selected_columns], hide_index=True)
+    st.dataframe(df[selected_columns], hide_index=True)
     
-        ### Graph: Average Discount Percentage vs Take-up Rate ###
-        st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
+    ### Graph: Average Discount Percentage vs Take-up Rate ###
+    st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
     
-        df_avg = df.groupby("L1 Category", as_index=False).agg({
-            "discount_percentage_best": "mean",
-            "take_up_rate_best": "mean"
-        })
+    df_avg = df.groupby("L1 Category", as_index=False).agg({
+        "discount_percentage_best": "mean",
+        "take_up_rate_best": "mean"
+    })
     
-        fig = px.scatter(
-            df_avg, 
-            x="discount_percentage_best", 
-            y="take_up_rate_best", 
-            text="L1 Category",  
-            title="Effectiveness of Discounts (Averaged by L1 Category)"
-        )
+    fig = px.scatter(
+        df_avg, 
+        x="discount_percentage_best", 
+        y="take_up_rate_best", 
+        text="L1 Category",  
+        title="Effectiveness of Discounts (Averaged by L1 Category)"
+    )
     
-        fig.update_traces(textposition="top center")
-        st.plotly_chart(fig)
+    fig.update_traces(textposition="top center")
+    st.plotly_chart(fig)
     
-        ### Export CSV ###
-        export_df = df[["Product ID", "Hub ID Fulfilled", "take_up_rate_best", "discount_percentage_best"]]
-        st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
+    ### Export CSV ###
+    export_df = df[["Product ID", "Hub ID Fulfilled", "take_up_rate_best", "discount_percentage_best"]]
+    st.download_button("Download Results as CSV", export_df.to_csv(index=False), "take_up_rate_results.csv", "text/csv")
 
 else:
     st.write("Upload all three CSV files to proceed.")
