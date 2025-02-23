@@ -152,7 +152,7 @@ if discount_sales_file and discount_price_file and normal_sales_file:
         title="Effectiveness of Discounts (Highest Take-up Rate by L1 Category)",
         text="discount_label",  # Show discount percentage as text
         color=df_avg["bar_color"],  # Assign conditional colors
-        color_discrete_map="identity"  # Forces the use of custom colors
+        color_discrete_map="identity",  # Forces the use of custom colors
     )
     
     # Adjust text position to be on the left of the bars
