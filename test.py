@@ -89,8 +89,11 @@ if discount_sales_file and discount_price_file and normal_sales_file:
     df = df.sort_values(by=["Product ID", "Product Name"], ascending=[True, True])
     selected_columns = [col for col in ["Product ID", "Product Name","FO Discount %", "Take Up Rate Performance"] if col in df.columns]
     
-    st.dataframe(df[selected_columns], hide_index=True)
-    
+    #st.dataframe(df[selected_columns], hide_index=True)
+    df_view = df[selected_columns].drop_duplicates()
+
+    # Display the dataframe without modifying the original data
+    st.dataframe(df_view, hide_index=True)
     ### Graph: Average Discount Percentage vs Take-up Rate ###
     st.subheader("Best Discount % vs. Take-up Rate (Averaged)")
     
